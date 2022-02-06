@@ -25,6 +25,8 @@ FSExploreWidget::FSExploreWidget(QWidget *parent) : QWidget(parent), model(nullp
 
     tbGo = new QToolButton(this);
     gridLay->addWidget(tbGo, 0, 3, 1, 1);
+    tbGo->setText("Go");
+    connect(tbGo, SIGNAL(clicked()), this, SLOT(goPath()));
    //*
 
 
@@ -78,7 +80,9 @@ void FSExploreWidget::chgDisk(int index)
 
 void FSExploreWidget::goMainPath()
 {
-   rebuildModel("/");
+   //rebuildModel("/");
+   rebuildModel(rootDir);
+   lePath->setText("");
   // rebuildModel("/home");
 
 }
@@ -147,4 +151,9 @@ void FSExploreWidget::rebuildModel(QString str)
     foreach (QStandardItem *item1, list1) qDebug() << item1->text();
     */
    //*
+}
+
+void FSExploreWidget::goPath()
+{
+    rebuildModel(lePath->text());
 }
