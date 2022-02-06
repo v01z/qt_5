@@ -9,8 +9,9 @@
 #include <QPushButton>
 #include <QStandardItemModel>
 #include <QApplication>
+#include <QDebug> //
 
-Q_PROPERTY(QStandardItemModel *model READ getCurrentModel WRITE setNewModel)
+//Q_PROPERTY(QStandardItemModel *model READ getCurrentModel WRITE setNewModel)
 
 class FSExploreWidget : public QWidget
 {

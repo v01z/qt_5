@@ -1,8 +1,13 @@
-#include "fsexplorewidget.h"
+﻿#include "fsexplorewidget.h"
 #include <QDir>
+#include <QList>//*
 
 FSExploreWidget::FSExploreWidget(QWidget *parent) : QWidget(parent), model(nullptr)
 {
+    //
+    parent->setMinimumSize(500,600);
+    //
+
    gridLay = new QGridLayout(this);        // создаем слой для компоновки
    this->setLayout(gridLay);               // устанавливаем слой на виджет
    tree = new QTreeView(this);
@@ -39,6 +44,10 @@ FSExploreWidget::FSExploreWidget(QWidget *parent) : QWidget(parent), model(nullp
        rebuildModel("/");
    }
 
+   //*
+  // delete tree;
+   //*
+
 }
 
 void FSExploreWidget::chgDisk(int index)
@@ -50,6 +59,8 @@ void FSExploreWidget::chgDisk(int index)
 void FSExploreWidget::goMainPath()
 {
    rebuildModel("/");
+  // rebuildModel("/home");
+
 }
 
 
@@ -72,6 +83,11 @@ void FSExploreWidget::rebuildModel(QString str)
    dir.setFilter(QDir::Hidden | QDir::NoSymLinks | QDir::Dirs);
    QStringList list = dir.entryList();
    int amount = list.count();
+
+   //
+   qDebug() << "folders count: " << amount;
+   //
+
    QList<QStandardItem*>folders;
    for (int i = 0; i < amount; i++)
    {
@@ -81,7 +97,18 @@ void FSExploreWidget::rebuildModel(QString str)
 
    items.at(0)->appendRows(folders);
 
-   dir.setFilter(QDir::Hidden | QDir::NoSymLinks | QDir::Files);amount = list.count();
+   dir.setFilter(QDir::Hidden | QDir::NoSymLinks | QDir::Files);
+
+   //*
+    list = dir.entryList();
+   //*
+
+   amount = list.count();
+
+   //*
+   qDebug() << "files count: " << amount;
+   //*
+
    QList<QStandardItem*>files;
    for (int i = 0; i < amount; i++)
    {
@@ -91,4 +118,13 @@ void FSExploreWidget::rebuildModel(QString str)
 
    items.at(0)->appendRows(files);
    setNewModel(model);
+
+
+   //*
+   /*
+   QList <QStandardItem*>list1 = model->findItems ("home",  Qt::MatchExactly | Qt::MatchRecursive);
+
+    foreach (QStandardItem *item1, list1) qDebug() << item1->text();
+    */
+   //*
 }
