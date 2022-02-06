@@ -22,14 +22,14 @@ FSExploreWidget::FSExploreWidget(QWidget *parent) : QWidget(parent), model(nullp
    //*
    lePath = new QLineEdit(this);
    gridLay->addWidget(lePath,0, 2, 1, 1);
-   //QRegExpValidator *validator = new QRegExpValidator(QRegExp(R"("^(?!\/).{0,}$")"), this);
 
    //Так как первый символ "слэш" - root (а, в случае с win-юзерами - имя диска со
    //слешем) у нас уже есть, то удаляем его с помощью регулярки, оставляя лишь остаток
-   QRegExpValidator *validator = new QRegExpValidator(QRegExp("^(?!\/).{0,}$"), this);
+   QRegExpValidator *validator = new QRegExpValidator(QRegExp("^(?!\\/).{0,}$"), this);
    lePath->setValidator(validator);
 
    //connect(lePath, &QLineEdit::returnPressed, this, goPath());
+   connect(lePath, &QLineEdit::returnPressed(), this, goPath());
 
     tbGo = new QToolButton(this);
     gridLay->addWidget(tbGo, 0, 3, 1, 1);
