@@ -130,5 +130,8 @@ void FSExploreWidget::rebuildModel(QString str)
 
 void FSExploreWidget::goPath()
 {
-    rebuildModel(rootDir+lePath->text());
+    QString path { rootDir + lePath->text() };
+
+    if (QDir(path).exists())
+        rebuildModel(path);
 }
