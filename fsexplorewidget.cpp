@@ -1,6 +1,7 @@
 ﻿#include "fsexplorewidget.h"
 #include <QDir>
 #include <QList>//*
+#include <QRegExpValidator>//
 
 FSExploreWidget::FSExploreWidget(QWidget *parent) : QWidget(parent), model(nullptr)
 {
@@ -20,8 +21,15 @@ FSExploreWidget::FSExploreWidget(QWidget *parent) : QWidget(parent), model(nullp
 
    //*
    lePath = new QLineEdit(this);
-   //gridLay->addWidget(linePath,0, 1, 1, 2);
    gridLay->addWidget(lePath,0, 2, 1, 1);
+   //QRegExpValidator *validator = new QRegExpValidator(QRegExp(R"("^(?!\/).{0,}$")"), this);
+
+   //Так как первый символ "слэш" - root (а, в случае с win-юзерами - имя диска со
+   //слешем) у нас уже есть, то удаляем его с помощью регулярки, оставляя лишь остаток
+   QRegExpValidator *validator = new QRegExpValidator(QRegExp("^(?!\/).{0,}$"), this);
+   lePath->setValidator(validator);
+
+   //connect(lePath, &QLineEdit::returnPressed, this, goPath());
 
     tbGo = new QToolButton(this);
     gridLay->addWidget(tbGo, 0, 3, 1, 1);
@@ -108,10 +116,6 @@ void FSExploreWidget::rebuildModel(QString str)
    QStringList list = dir.entryList();
    int amount = list.count();
 
-   //
-   qDebug() << "folders count: " << amount;
-   //
-
    QList<QStandardItem*>folders;
    for (int i = 0; i < amount; i++)
    {
@@ -123,15 +127,9 @@ void FSExploreWidget::rebuildModel(QString str)
 
    dir.setFilter(QDir::Hidden | QDir::NoSymLinks | QDir::Files);
 
-   //*
-    list = dir.entryList();
-   //*
+   list = dir.entryList();
 
    amount = list.count();
-
-   //*
-   qDebug() << "files count: " << amount;
-   //*
 
    QList<QStandardItem*>files;
    for (int i = 0; i < amount; i++)
@@ -142,18 +140,9 @@ void FSExploreWidget::rebuildModel(QString str)
 
    items.at(0)->appendRows(files);
    setNewModel(model);
-
-
-   //*
-   /*
-   QList <QStandardItem*>list1 = model->findItems ("home",  Qt::MatchExactly | Qt::MatchRecursive);
-
-    foreach (QStandardItem *item1, list1) qDebug() << item1->text();
-    */
-   //*
 }
 
 void FSExploreWidget::goPath()
 {
-    rebuildModel(lePath->text());
+    rebuildModel(rootDir+lePath->text());
 }

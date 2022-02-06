@@ -37,14 +37,6 @@ private:
    //*
    QLineEdit *lePath;
    QToolButton *tbGo;
-//   QString currentPath;
-   //*
-private slots:
-   void chgDisk(int index); // получаем индекс выбранного диска
-   void goMainPath();       // Для UNIX-подобных ОС верхним уровнем является
-                            // путь /
-   void goPath();
-private:
    QStandardItemModel *model;
    QString currentPath;
 
@@ -53,6 +45,14 @@ private:
 #elif
    QString rootDir;
 #endif //unix
+
+   //
+private slots:
+   void chgDisk(int index); // получаем индекс выбранного диска
+   void goMainPath();       // Для UNIX-подобных ОС верхним уровнем является
+                            // путь /
+   void goPath();
+ //  void removeFirstSlash(QString&);
 
 protected:
 };
