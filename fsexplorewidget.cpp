@@ -18,6 +18,16 @@ FSExploreWidget::FSExploreWidget(QWidget *parent) : QWidget(parent), model(nullp
                                            // и столбцов
    setMinimumSize(500, 600);               // ограничиваем размер виджета
 
+   //*
+   lePath = new QLineEdit(this);
+   //gridLay->addWidget(linePath,0, 1, 1, 2);
+   gridLay->addWidget(lePath,0, 2, 1, 1);
+
+    tbGo = new QToolButton(this);
+    gridLay->addWidget(tbGo, 0, 3, 1, 1);
+   //*
+
+
    if(QSysInfo::productType() == "windows")
    {
        disckSelBox = new QComboBox(this);
@@ -32,16 +42,26 @@ FSExploreWidget::FSExploreWidget(QWidget *parent) : QWidget(parent), model(nullp
 
         if (amount > 0)
        {
-           rebuildModel(list.at(0).path());
+            //*
+//            currentPath
+//#ifndef (__unix__)
+#if !defined(__unix__)
+           rootDir = (list.at(0).path());
+#endif
+           rebuildModel(rootDir);
+           //*
+           //rebuildModel(list.at(0).path());
        }
        gridLay->addWidget(disckSelBox, 0, 0, 1, 2); // координаты
        connect(disckSelBox, SIGNAL(activated(int)), this, SLOT(chgDisk(int)));
    } else {
        mainPath = new QPushButton(this);
-       mainPath->setText("/");
+       //mainPath->setText("/");
+       mainPath->setText(rootDir);
        gridLay->addWidget(mainPath, 0, 0, 1, 2);
        connect(mainPath, SIGNAL(clicked()), this, SLOT(goMainPath()));
-       rebuildModel("/");
+       //rebuildModel("/");
+       rebuildModel(rootDir);
    }
 
    //*
@@ -72,7 +92,7 @@ void FSExploreWidget::setNewModel(QStandardItemModel *newmodel)
 
 void FSExploreWidget::rebuildModel(QString str)
 {
-   curretnPath = str;
+   currentPath = str;
    QStandardItemModel *model = new QStandardItemModel(this);
    QList<QStandardItem*> items;
    items.append(new QStandardItem(QIcon(QApplication::style()->standardIcon(QStyle::SP_DriveHDIcon)), str));

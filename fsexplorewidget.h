@@ -10,6 +10,8 @@
 #include <QStandardItemModel>
 #include <QApplication>
 #include <QDebug> //
+#include <QLineEdit> //
+#include <QToolButton>//
 
 //Q_PROPERTY(QStandardItemModel *model READ getCurrentModel WRITE setNewModel)
 
@@ -31,13 +33,26 @@ private:
    QTreeView *tree;
    QPushButton *mainPath;
    QComboBox *disckSelBox;
+
+   //*
+   QLineEdit *lePath;
+   QToolButton *tbGo;
+//   QString currentPath;
+   //*
 private slots:
    void chgDisk(int index); // получаем индекс выбранного диска
    void goMainPath();       // Для UNIX-подобных ОС верхним уровнем является
                             // путь /
 private:
    QStandardItemModel *model;
-   QString curretnPath;
+   QString currentPath;
+
+#if defined (__unix__)
+   inline static const QString rootDir { "/" };
+#elif
+   QString rootDir;
+#endif //unix
+
 protected:
 };
 
