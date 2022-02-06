@@ -48,6 +48,7 @@ private slots:
    void chgDisk(int index);
    void goMainPath();
    void goPath();
+   void updatePath();
 
 protected:
 };

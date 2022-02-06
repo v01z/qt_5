@@ -1,6 +1,7 @@
 ﻿#include "fsexplorewidget.h"
 #include <QDir>
 #include <QRegExpValidator>
+#include <QDebug>
 
 FSExploreWidget::FSExploreWidget(QWidget *parent) : QWidget(parent), model(nullptr)
 {
@@ -12,6 +13,9 @@ FSExploreWidget::FSExploreWidget(QWidget *parent) : QWidget(parent), model(nullp
     tree = new QTreeView(this);
     gridLay->addWidget(tree, 1, 0, 10, 10);
 
+    //Юзер кликает по дереву каталогов
+    connect(tree, SIGNAL(clicked(QModelIndex)), this, SLOT(updatePath()));
+
     setMinimumSize(500, 600);
 
     lePath = new QLineEdit(this);
@@ -21,6 +25,7 @@ FSExploreWidget::FSExploreWidget(QWidget *parent) : QWidget(parent), model(nullp
     QRegExpValidator *validator = new QRegExpValidator(QRegExp("^(?!\\/).{0,}$"), this);
     lePath->setValidator(validator);
 
+    //Юзер нажал 'Enter' в поле LineEdit
     connect(lePath, SIGNAL(returnPressed()), this, SLOT(goPath()));
 
     tbGo = new QToolButton(this);
@@ -142,4 +147,19 @@ void FSExploreWidget::goPath()
 
     if (QDir(path).exists())
         rebuildModel(path);
+    else
+    {
+        lePath->clear();
+        rebuildModel(rootDir);
+    }
+}
+
+//Добавляем выделенную юзером диру в LineEdit
+void FSExploreWidget::updatePath()
+{
+    QModelIndex index = tree->currentIndex();
+
+    QVariant data = tree->model()->data(index);
+
+    lePath->setText(lePath->text() + rootDir + data.toString());
 }
