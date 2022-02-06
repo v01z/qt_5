@@ -17,8 +17,10 @@ FSExploreWidget::FSExploreWidget(QWidget *parent) : QWidget(parent), model(nullp
     lePath = new QLineEdit(this);
     gridLay->addWidget(lePath,0, 2, 1, 1);
 
+    //Удалим слеш в начале пути
     QRegExpValidator *validator = new QRegExpValidator(QRegExp("^(?!\\/).{0,}$"), this);
     lePath->setValidator(validator);
+
     connect(lePath, SIGNAL(returnPressed()), this, SLOT(goPath()));
 
     tbGo = new QToolButton(this);
@@ -42,6 +44,8 @@ FSExploreWidget::FSExploreWidget(QWidget *parent) : QWidget(parent), model(nullp
         if (amount > 0)
        {
 
+//rootDir для unix у нас константный и компилятор тут ругается;
+//успокоим его
 #if !defined(__unix__)
            rootDir = (list.at(0).path());
 #endif
@@ -86,12 +90,14 @@ void FSExploreWidget::rebuildModel(QString str)
    currentPath = str;
 
    QStandardItemModel *model = new QStandardItemModel(this);
+  // model->setHeaderData(0, Qt::Horizontal, "folders");
+
    QList<QStandardItem*> items;
    items.append(new QStandardItem(QIcon(QApplication::style()->standardIcon(QStyle::SP_DriveHDIcon)), str));
 
    model->appendRow(items);
 
-   //****************** заполнение списка директорий *******************
+   //****************** заполнение списка директорий *****************
 
    QDir dir(str);
    dir.setFilter(QDir::Hidden | QDir::NoSymLinks | QDir::Dirs);
@@ -126,6 +132,8 @@ void FSExploreWidget::rebuildModel(QString str)
 
    items.at(0)->appendRows(files);
    setNewModel(model);
+
+   model->setHeaderData(0, Qt::Horizontal, "File system tree");
 }
 
 void FSExploreWidget::goPath()
