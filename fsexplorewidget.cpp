@@ -28,8 +28,7 @@ FSExploreWidget::FSExploreWidget(QWidget *parent) : QWidget(parent), model(nullp
    QRegExpValidator *validator = new QRegExpValidator(QRegExp("^(?!\\/).{0,}$"), this);
    lePath->setValidator(validator);
 
-   //connect(lePath, &QLineEdit::returnPressed, this, goPath());
-   connect(lePath, &QLineEdit::returnPressed(), this, goPath());
+   connect(lePath, SIGNAL(returnPressed()), this, SLOT(goPath()));
 
     tbGo = new QToolButton(this);
     gridLay->addWidget(tbGo, 0, 3, 1, 1);
