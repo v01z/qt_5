@@ -1,7 +1,6 @@
 ﻿#include "fsexplorewidget.h"
 #include <QDir>
 #include <QRegExpValidator>
-#include <QDebug>
 
 FSExploreWidget::FSExploreWidget(QWidget *parent) : QWidget(parent), model(nullptr)
 {
@@ -95,7 +94,6 @@ void FSExploreWidget::rebuildModel(QString str)
    currentPath = str;
 
    QStandardItemModel *model = new QStandardItemModel(this);
-  // model->setHeaderData(0, Qt::Horizontal, "folders");
 
    QList<QStandardItem*> items;
    items.append(new QStandardItem(QIcon(QApplication::style()->standardIcon(QStyle::SP_DriveHDIcon)), str));
